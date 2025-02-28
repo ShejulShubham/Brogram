@@ -1,14 +1,56 @@
+import { useState, useEffect } from 'react';
 import { workoutProgram as training_plan } from '../utils/index.js'
 import WorkoutCard from './WorkoutCard.jsx';
 
 export default function Grid() {
 
-    const isLocked = true;
-    const selectedWorkout = 4;
+    const [savedWorkouts, setSavedWorkouts] = useState(null);
+    const [selectedWorkout, setSelectedWorkout] = useState(null);
+    const completedWorkout = Object.keys(savedWorkouts || {}).filter((value) => {
+        const entry = savedWorkouts[value];
+        return entry.isComplete;
+    });
+
+    function handleSave(index, data) {
+        // save to local storage and modify the saved workouts state
+        const newObj = {
+            ...savedWorkouts,
+            [index]: {
+                ...data,
+                isComplete: !!data.isComplete || !!savedWorkouts?.[index]?.isComplete
+            }
+        }
+
+        setSavedWorkouts(newObj);
+        localStorage.setItem('brogram', JSON.stringify(newObj));
+        setSelectedWorkout(null);
+    }
+
+    function handleComplete(index, data) {
+        // complete a workout (so basically we modify the complete status)
+        const newObj = { ...data }
+        newObj.isComplete = true;
+        handleSave(index, newObj);
+    }
+
+    useEffect(() => {
+        if (!localStorage) { return }
+        let savedData = {}
+
+        if (localStorage.getItem('brogram')) {
+            savedData = JSON.parse(localStorage.getItem('brogram'));
+        }
+        setSavedWorkouts(savedData);
+
+    }, [])
 
     return (
         <div className="training-plan-grid">
             {Object.keys(training_plan).map((workout, workoutIndex) => {
+                const isLocked = workoutIndex === 0 ?
+                    false :
+                    !completedWorkout.includes(`${workoutIndex - 1}`);
+
                 const type = workoutIndex % 3 === 0 ?
                     'PUSH' : workoutIndex % 3 === 1 ?
                         'PULL' : 'LEGS'
@@ -33,12 +75,21 @@ export default function Grid() {
                             type={type}
                             workoutIndex={workoutIndex}
                             dayNum={dayNum}
-                            icon={icon} />
+                            icon={icon}
+                            handleSave={handleSave}
+                            handleComplete={handleComplete}
+                            savedWeights={savedWorkouts?.[workoutIndex]?.weights}
+                        />
                     )
                 }
 
                 return (
-                    <button className={'card plan-card ' + (isLocked ? 'inactive' : '')} key={workoutIndex}>
+                    <button onClick={() => {
+                        if (isLocked) { return }
+                        setSelectedWorkout(workoutIndex)
+                    }}
+                        className={'card plan-card ' + (isLocked ? 'inactive' : '')}
+                        key={workoutIndex}>
                         <div className='plan-card-header'>
                             <p>Day {dayNum}</p>
                         </div>

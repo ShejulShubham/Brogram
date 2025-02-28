@@ -63,6 +63,7 @@ h3,
   position: relative;
   z-index: 1;
   cursor: not-allowed;
+  opacity: 0.9;;
 }
 
 .plan-card-header {
