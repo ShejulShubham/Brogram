@@ -1,8 +1,12 @@
-# React + Vite
+# Brogram
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## The 30 simple workouts programs
 
-Currently, two official plugins are available:
+### Complete this training program if you want too...
+- Follow a simple program with guaranteed results
+- Get fit, healthy, strong and shredded
+- Learn more about gym, training and technique
+- Become a lifetime gym bro 💪
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+![page](/public/brogram.png)
